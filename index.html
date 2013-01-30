@@ -29,7 +29,7 @@ function start() {
 	.run(function () {
 		box1.style.left = 160 + "px";
 	})
-	.done()
+	.done();
 	var box2 = document.getElementById("box2");
 	setTimeout(function () {
 		box2.style.left = 20 + "px";
@@ -40,7 +40,7 @@ function start() {
 				box2.style.left = 160 + "px";
 			}, 3000);
 		}, 2000)
-	},1000)
+	},1000);
 }
 	</script>
 </head>
@@ -63,10 +63,11 @@ function start() {
 	.run(function () {
 		box1.style.left = 120 + "px";
 	})
-	.run(function () {
-		box1.style.left = 120 + "px";
-	})
 	.sleep(3000)
+	.run(function () {
+		box1.style.left = 160 + "px";
+	})
+	.done()
 		</pre>
 		<div class="box" id="box1"></div>
 	</div>
@@ -80,9 +81,10 @@ function start() {
 			box2.style.left = 80 + "px";
 			setTimeout(function () {
 				box2.style.left = 120 + "px";
+				box2.style.left = 160 + "px";
 			}, 3000);
 		}, 2000)
-	},1000)
+	},1000);
 		</pre>
 		<div class="box" id="box2"></div>
 	</div>
