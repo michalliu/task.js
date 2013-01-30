@@ -1,6 +1,6 @@
 task.js
 =======
-A beautiful way to control your task flow
+A beautiful way to control your task flow. [Demo](http://michalliu.github.com/task.js/)
 
 Usage
 =====
