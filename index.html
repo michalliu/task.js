@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>task.js - A beautiful way to control your task flow</title>
+	<style>
+		.demo{position:relative;padding-bottom:50px;}
+		.box {width:50px;height:50px;position:absolute;left:0;bottom:0;background:green;}
+		pre.code{font-family:"consolas";font-size:12px;display:block;background:#eee;padding:5px 0;}
+	</style>
+	<script src="/src/task.js"></script>
+	<script>
+function start() {
+	var box1 = document.getElementById("box1");
+	task()
+	.run(function() {
+		box1.style.left = 20 + "px";
+	})
+	.sleep(1000)
+	.run(function () {
+		box1.style.left = 80 + "px";
+	})
+	.sleep(2000)
+	.run(function () {
+		box1.style.left = 120 + "px";
+	})
+	.sleep(3000)
+	.run(function () {
+		box1.style.left = 160 + "px";
+	})
+	.done()
+	var box2 = document.getElementById("box2");
+	setTimeout(function () {
+		box2.style.left = 20 + "px";
+		setTimeout(function () {
+			box2.style.left = 80 + "px";
+			setTimeout(function () {
+				box2.style.left = 120 + "px";
+				box2.style.left = 160 + "px";
+			}, 3000);
+		}, 2000)
+	},1000)
+}
+	</script>
+</head>
+<body>
+	<button onclick="start();">click to start</button>
+	<div class="demo">
+		<p>task.js</p>
+		<pre class="code">
+	var box1 = document.getElementById("box1");
+	task()
+	.run(function() {
+		box1.style.left = 20 + "px";
+	})
+	.sleep(1000)
+	.run(function () {
+		box1.style.left = 80 + "px";
+	})
+	.sleep(2000)
+	.run(function () {
+		box1.style.left = 120 + "px";
+	})
+	.run(function () {
+		box1.style.left = 120 + "px";
+	})
+	.sleep(3000)
+		</pre>
+		<div class="box" id="box1"></div>
+	</div>
+	<div class="demo">
+		<p>traditional way</p>
+		<pre class="code">
+	var box2 = document.getElementById("box2");
+	setTimeout(function () {
+		box2.style.left = 20 + "px";
+		setTimeout(function () {
+			box2.style.left = 80 + "px";
+			setTimeout(function () {
+				box2.style.left = 120 + "px";
+			}, 3000);
+		}, 2000)
+	},1000)
+		</pre>
+		<div class="box" id="box2"></div>
+	</div>
+</body>
+</html>
+
