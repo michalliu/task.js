@@ -22,5 +22,8 @@ task.prototype = {
 		};
 		worker.postMessage(this.sleepTotal);
 		return this;
+	},
+	done: function () {
+		this.sleep(16)
 	}
 };
