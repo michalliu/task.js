@@ -36,10 +36,6 @@
 			}, that.timeout);
 			this.timer.push(timer);
 			return this;
-		},
-		done: function (fn) {
-			this.sleep(0);
-			this.run(fn);
 		}
 	};
 	window.task = Task;
