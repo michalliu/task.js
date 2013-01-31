@@ -21,6 +21,9 @@ task.prototype = {
 		return this;
 	},
 	sleep: function (time) {
+		if (typeof time === 'funtion') {
+			time = time();
+		}
 		var that = this;
 		that.timeout += time;
 		var timer = setTimeout(function () {
@@ -31,10 +34,5 @@ task.prototype = {
 		}, that.timeout);
 		this.timer.push(timer);
 		return this;
-	},
-	done: function () {
-		this.timer = null;
-		this.todo = null;
-		this.timeout = null;
 	}
 };
