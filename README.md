@@ -25,7 +25,6 @@ Think of the following code
 By this tiny script task.js, you just need this
 
     task()
-    .run(function () {})
     .sleep(1000)
     .run(function () {})
     .sleep(1000)
@@ -34,4 +33,5 @@ By this tiny script task.js, you just need this
     .run(function () {})
     .sleep(1000)
     .run(function () {})
-    .done()
+    .sleep(1000)
+    .run(function () {})
