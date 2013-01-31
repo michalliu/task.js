@@ -13,6 +13,10 @@
 	<script>
 function start() {
 	var box1 = document.getElementById("box1");
+	var report1 = document.getElementById("report1");
+	var start1 = Date.now();
+	var end1;
+
 	task()
 	.sleep(1000)
 	.run(function() {
@@ -29,8 +33,17 @@ function start() {
 	.sleep(3000)
 	.run(function () {
 		box1.style.left = 160 + "px";
+	})
+	.done(function () {
+		var text;
+		end1 = Date.now();
+		text = "time used " + (end1 - start1) + "ms";
+		report1.innerText = text;
 	});
+
 	var box2 = document.getElementById("box2");
+	var report2 = document.getElementById("report2");
+	var start1 = Date.now();
 	setTimeout(function () {
 		box2.style.left = 20 + "px";
 		setTimeout(function () {
@@ -39,6 +52,10 @@ function start() {
 				box2.style.left = 120 + "px";
 				setTimeout(function () {
 					box2.style.left = 160 + "px";
+					var text;
+					end2 = Date.now();
+					text = "time used " + (end1 - start1) + "ms";
+					report2.innerText = text;
 				}, 3000);
 			}, 2000);
 		}, 1000)
@@ -50,7 +67,7 @@ function start() {
 <a href="https://github.com/michalliu/task.js"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:1;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
 	<button onclick="start();">click to start</button>
 	<div class="demo">
-		<p>task.js</p>
+		<p>task.js <span class="report" id="report1"></span></p>
 	<pre class="code">
 	task()
 	.sleep(1000)
@@ -73,7 +90,7 @@ function start() {
 		<div class="box" id="box1"></div>
 	</div>
 	<div class="demo">
-		<p>traditional way</p>
+		<p>traditional way <span class="report" id="report2"></span></p>
 		<pre class="code">
 	var box2 = document.getElementById("box2");
 	setTimeout(function () {
