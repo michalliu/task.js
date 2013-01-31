@@ -9,11 +9,12 @@
 		.box {width:50px;height:50px;position:absolute;left:0;bottom:0;background:green;}
 		pre.code{font-family:"consolas";font-size:12px;display:block;background:#eee;padding:5px 0;}
 	</style>
-	<script src="./src/task.js"></script>
+	<script src="task.js"></script>
 	<script>
 function start() {
 	var box1 = document.getElementById("box1");
 	task()
+	.sleep(1000)
 	.run(function() {
 		box1.style.left = 20 + "px";
 	})
@@ -28,8 +29,7 @@ function start() {
 	.sleep(3000)
 	.run(function () {
 		box1.style.left = 160 + "px";
-	})
-	.done();
+	});
 	var box2 = document.getElementById("box2");
 	setTimeout(function () {
 		box2.style.left = 20 + "px";
@@ -37,9 +37,11 @@ function start() {
 			box2.style.left = 80 + "px";
 			setTimeout(function () {
 				box2.style.left = 120 + "px";
-				box2.style.left = 160 + "px";
-			}, 3000);
-		}, 2000)
+				setTimeout(function () {
+					box2.style.left = 160 + "px";
+				}, 3000);
+			}, 2000);
+		}, 1000)
 	},1000);
 }
 	</script>
@@ -49,9 +51,9 @@ function start() {
 	<button onclick="start();">click to start</button>
 	<div class="demo">
 		<p>task.js</p>
-		<pre class="code">
-	var box1 = document.getElementById("box1");
+	<pre class="code">
 	task()
+	.sleep(1000)
 	.run(function() {
 		box1.style.left = 20 + "px";
 	})
@@ -66,9 +68,8 @@ function start() {
 	.sleep(3000)
 	.run(function () {
 		box1.style.left = 160 + "px";
-	})
-	.done()
-		</pre>
+	});
+	</pre>
 		<div class="box" id="box1"></div>
 	</div>
 	<div class="demo">
@@ -81,9 +82,11 @@ function start() {
 			box2.style.left = 80 + "px";
 			setTimeout(function () {
 				box2.style.left = 120 + "px";
-				box2.style.left = 160 + "px";
-			}, 3000);
-		}, 2000)
+				setTimeout(function () {
+					box2.style.left = 160 + "px";
+				}, 3000);
+			}, 2000);
+		}, 1000)
 	},1000);
 		</pre>
 		<div class="box" id="box2"></div>
