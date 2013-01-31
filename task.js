@@ -28,9 +28,13 @@ task.prototype = {
 		that.timeout += time;
 		var timer = setTimeout(function () {
 			var callbacks = that.todo[timer];
+			var start = Date.now();
+			var delay;
 			callbacks.forEach(function (cb) {
 				cb();
 			});
+			delay = Date.now() - start;
+			that.timeout += delay;
 		}, that.timeout);
 		this.timer.push(timer);
 		return this;
