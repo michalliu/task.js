@@ -4,15 +4,17 @@
 		if (!(this instanceof Task)) {
 			return new Task();
 		}
+		var undef;
 		this.timer = [];
 		this.todo = {};
 		this.timeout = 0;
+		this.lastResult = undef;
 	}
 	Task.prototype = {
 		run: function (fn) {
 			var lastTimer;
 			if (this.timer.length <= 0) {
-				fn();
+				this.lastResult = fn(this.lastResult);
 			} else {
 				lastTimer = this.timer[this.timer.length - 1];
 				if (!this.todo[lastTimer]) {
@@ -31,7 +33,7 @@
 			var timer = setTimeout(function () {
 				var callbacks = that.todo[timer];
 				callbacks.forEach(function (cb) {
-					cb();
+					that.lastResult = cb(that.lastResult);
 				});
 			}, that.timeout);
 			this.timer.push(timer);
