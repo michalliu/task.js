@@ -1,5 +1,12 @@
 (function () {
 	'use strict';
+	function assertionError(message) {
+		this.message = message;
+		this.toString = function () {
+			return "Assertion failed: " + this.message;
+		};
+	}
+
 	function Task() {
 		if (!(this instanceof Task)) {
 			return new Task();
@@ -10,6 +17,7 @@
 		this.timeout = 0;
 		this.lastResult = undef;
 	}
+
 	Task.prototype = {
 		run: function (fn) {
 			var lastTimer;
@@ -32,11 +40,43 @@
 			that.timeout += time;
 			var timer = setTimeout(function () {
 				var callbacks = that.todo[timer];
-				callbacks.forEach(function (cb) {
-					that.lastResult = cb(that.lastResult);
-				});
+				if(callbacks && callbacks.forEach) {
+					callbacks.forEach(function (cb) {
+						that.lastResult = cb(that.lastResult);
+					});
+				}
 			}, that.timeout);
 			this.timer.push(timer);
+			return this;
+		},
+		assert: function (assertFn) {
+			var that = this;
+			var timers;
+			if (typeof assertFn === "function"){
+				this.sleep(0).run(function (d) {
+					var ret = assertFn(d);
+					var statement = assertFn.toString();
+					if (!ret) {
+						if (task.onAssertionError) {
+							try{
+								assertionError.prototype = new Error();
+								throw new assertionError(statement);
+							} catch (ex) {
+								task.onAssertionError(ex);
+							}
+						} else {
+							if (window.console && console.assert) {
+								console.assert(ret,statement);
+							} else {
+								throw new assertionError(statement);
+							}
+						}
+						timers = that.timer.forEach(function (timer) {
+							clearTimeout(timer);
+						});
+					}
+				}).sleep(0);
+			}
 			return this;
 		}
 	};
