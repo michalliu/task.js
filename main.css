@@ -1,0 +1,3 @@
+.demo{position:relative;padding-bottom:50px;}
+.box {width:50px;height:50px;position:absolute;left:0;bottom:0;background:green;-webkit-transition:left 1s ease;transition:left 1s ease;}
+pre.code{font-family:"consolas";font-size:12px;display:block;background:#eee;padding:5px 0;}
