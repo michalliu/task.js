@@ -49,13 +49,79 @@
 			this.timer.push(timer);
 			return this;
 		},
+		assertEquals: function () {
+			var fns = arguments;
+			return this.assert(function (d) {
+				var i=1,l=fns.length;
+				var fn = fns[0];
+				var lastVal;
+				var val;
+				if (typeof fn === "function") {
+					lastVal = fn(d);
+				} else {
+					lastVal = fn;
+				}
+				for (;i<l;i++) {
+					fn = fns[i];
+					if (typeof fn === "function") {
+						val = fn(d);
+					} else {
+						val = fn;
+					}
+					if (val !== lastVal) {
+						fns = null;
+						return [false, fn + " should " + (typeof fn === "function" ? "return ": "be ") + lastVal];
+					}
+				}
+				fns = null;
+				return [true, ""];
+			});
+		},
+		assertNotEquals:function () {
+			var fns = arguments;
+			return this.assert(function (d) {
+				var i=1,l=fns.length;
+				var fn = fns[0];
+				var lastVal;
+				var val;
+				if (typeof fn === "function") {
+					lastVal = fn(d);
+				} else {
+					lastVal = fn;
+				}
+				for (;i<l;i++) {
+					fn = fns[i];
+					if (typeof fn === "function") {
+						val = fn(d);
+					} else {
+						val = fn;
+					}
+					if (val === lastVal) {
+						fns = null;
+						return [false, fn + " should not " + (typeof fn === "function" ? "return ": "be ") + lastVal];
+					}
+				}
+				fns = null;
+				return [true, ""];
+			});
+		},
+		assertFalse: function (fn) {
+			return this.assert(function (d) {
+				return [fn(d) === false, fn + " should " + (typeof fn === "function" ? "return ": "be ") + "false"];
+			});
+		},
+		assertTrue: function (fn) {
+			return this.assert(function (d) {
+				return [fn(d) === true, fn + " should " + (typeof fn === "function" ? "return ": "be ") + "true"];
+			});
+		},
 		assert: function (assertFn) {
 			var that = this;
-			var timers;
 			if (typeof assertFn === "function"){
 				this.sleep(0).run(function (d) {
-					var ret = assertFn(d);
-					var statement = assertFn.toString();
+					var result = assertFn(d);
+					var ret = result[0];
+					var statement = result[1];
 					if (!ret) {
 						if (task.onAssertionError) {
 							try{
@@ -71,7 +137,7 @@
 								throw new assertionError(statement);
 							}
 						}
-						timers = that.timer.forEach(function (timer) {
+						that.timer.forEach(function (timer) {
 							clearTimeout(timer);
 						});
 					}

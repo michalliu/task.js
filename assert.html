@@ -19,27 +19,143 @@
 	task.onAssertionError = function (err) {
 		log(err);
 	};
-	function assertionSuccess() {
+	function assertionTrueSuccess() {
 		task()
 		.run(function () {log("caculating...")})
 		.run(function () {
 			return 1+1;
 		})
 		.sleep(1000)
-		.assert(function (result) { return result===2;})
+		.assertTrue(function (result) { return result===2;})
 		.sleep(1000)
 		.run(function () {
 			log("done");
 		})
 	}
-	function assertionError() {
+	function assertionTrueError() {
 		task()
 		.run(function () {log("caculating...")})
 		.run(function () {
 			return 1+1;
 		})
 		.sleep(1000)
-		.assert(function (result) { return result===3;})
+		.assertTrue(function (result) { return result===3;})
+		.sleep(1000)
+		.run(function () {
+			log("done");
+		})
+	}
+	function assertionFalseSuccess() {
+		task()
+		.run(function () {log("caculating...")})
+		.run(function () {
+			return 1+1;
+		})
+		.sleep(1000)
+		.assertFalse(function (result) {return result===3;})
+		.sleep(1000)
+		.run(function () {
+			log("done");
+		})
+	}
+	function assertionFalseError() {
+		task()
+		.run(function () {log("caculating...")})
+		.run(function () {
+			return 1+1;
+		})
+		.sleep(1000)
+		.assertFalse(function (result) {return result===2;})
+		.sleep(1000)
+		.run(function () {
+			log("done");
+		})
+	}
+	function assertionEqualsSuccess() {
+		task()
+		.run(function () {log("caculating...")})
+		.run(function () {
+			return 1+1;
+		})
+		.sleep(1000)
+		.assertEquals(function (result) {return result;},
+					  function (result) {return result * 10 / 10}
+					 )
+		.sleep(1000)
+		.run(function () {
+			log("done");
+		})
+	}
+	function assertionEqualsFail() {
+		task()
+		.run(function () {log("caculating...")})
+		.run(function () {
+			return 1+1;
+		})
+		.sleep(1000)
+		.assertEquals(function (result) {return result;},
+					  function (result) {return result * 10 / 9}
+					 )
+		.sleep(1000)
+		.run(function () {
+			log("done");
+		})
+	}
+	function assertionEqualsFail2() {
+		task()
+		.run(function () {log("caculating...")})
+		.run(function () {
+			return 1+1;
+		})
+		.sleep(1000)
+		.assertEquals(4,
+					  5
+					 )
+		.sleep(1000)
+		.run(function () {
+			log("done");
+		})
+	}
+	function assertionNotEqualsSuccess() {
+		task()
+		.run(function () {log("caculating...")})
+		.run(function () {
+			return 1+1;
+		})
+		.sleep(1000)
+		.assertNotEquals(function (result) {return result;},
+					  	 function (result) {return result * 10 / 9}
+					    )
+		.sleep(1000)
+		.run(function () {
+			log("done");
+		})
+	}
+	function assertionNotEqualsFail() {
+		task()
+		.run(function () {log("caculating...")})
+		.run(function () {
+			return 1+1;
+		})
+		.sleep(1000)
+		.assertNotEquals(function (result) {return result;},
+					  	 function (result) {return result * 10 / 10}
+					    )
+		.sleep(1000)
+		.run(function () {
+			log("done");
+		})
+	}
+	function assertionNotEqualsFail2() {
+		task()
+		.run(function () {log("caculating...")})
+		.run(function () {
+			return 1+1;
+		})
+		.sleep(1000)
+		.assertNotEquals(5,
+					  	 5
+					 	)
 		.sleep(1000)
 		.run(function () {
 			log("done");
@@ -49,8 +165,16 @@
 </head>
 <body>
 <a href="https://github.com/michalliu/task.js"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:1;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
-	<button onclick="assertionSuccess();">assertion success</button>
-	<button onclick="assertionError();">assertion error</button>
+	<button onclick="assertionTrueSuccess();">assertion True success</button>
+	<button onclick="assertionTrueError();">assertion True fail</button>
+	<button onclick="assertionFalseSuccess();">assertion False success</button>
+	<button onclick="assertionFalseError();">assertion False fail</button>
+	<button onclick="assertionEqualsSuccess();">assertion Equals success</button>
+	<button onclick="assertionEqualsFail();">assertion Equals fail</button>
+	<button onclick="assertionEqualsFail2();">assertion Equals fail 2</button>
+	<button onclick="assertionNotEqualsSuccess();">assertion NotEquals success</button>
+	<button onclick="assertionNotEqualsFail();">assertion NotEquals fail</button>
+	<button onclick="assertionNotEqualsFail2();">assertion NotEquals fail 2</button>
 	<div id="log-holder">Logging Area</div>
 	<pre class="code">
 	task()
@@ -59,7 +183,7 @@
 		return 1+1;
 	})
 	.sleep(1000)
-	.assert(function (result) { return result===2;})
+	.assertTrue(function (result) { return result===2;}) // ok
 	.sleep(1000)
 	.run(function () {
 		log("done");
@@ -72,7 +196,119 @@
 		return 1+1;
 	})
 	.sleep(1000)
-	.assert(function (result) { return result===3;})
+	.assertTrue(function (result) { return result===3;}) // emm, problems
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	})
+	</pre>
+	<pre class="code">
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertFalse(function (result) {return result===3;}) // ok
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	})
+	</pre>
+	<pre class="code">
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertFalse(function (result) {return result===2;}) // emm, problems
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	})
+	</pre>
+	<pre class="code">
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertEquals(function (result) {return result;},
+				  function (result) {return result * 10 / 10} // ok
+				 )
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	})
+	</pre>
+	<pre class="code">
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertEquals(function (result) {return result;},
+				  function (result) {return result * 10 / 9} // emm, problems
+				 )
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	})
+	</pre>
+	<pre class="code">
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertEquals(4,5) // emm, problems
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	})
+	</pre>
+	<pre class="code">
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertNotEquals(function (result) {return result;},
+				  	 function (result) {return result * 10 / 9} // ok, they are not equal
+				    )
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	})
+	</pre>
+	<pre class="code">
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertNotEquals(function (result) {return result;},
+				  	 function (result) {return result * 10 / 10} // emm, problems, they should NOT equal
+				    )
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	})
+	</pre>
+	<pre class="code">
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertNotEquals(5,5) // emm, problems, they should NOT equal
 	.sleep(1000)
 	.run(function () {
 		log("done");
