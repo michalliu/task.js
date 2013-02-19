@@ -114,4 +114,23 @@ Instance method
 
 Static method
 ----
-onAssertionError
+
+**onAssertionFail**
+
+Hook the assertion fail event
+    
+    task.onAssertionFail = function (err) {
+        // err object contains error info
+        // or you can just throw it
+        throw err;
+    }
+
+What will happen if assertion failed?
+----
+
+it follows the following routine
+
+1. if `onAssertionFail` is defined, just let `onAssertionFail` handle it
+2. if `window` has `console` object, and console has assert method, let `window.console` handle it
+3. if no handlers, just throw an `AssertionFail` error
+4. stop the rest tasks
