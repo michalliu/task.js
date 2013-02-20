@@ -1,6 +1,6 @@
 task.js
 =======
-A beautiful way to control your task flow, simple and powerful. take a look at [Demo](http://michalliu.github.com/task.js/) and [automatic test](http://michalliu.github.com/task.js/test/index.html)
+A beautiful way to control your task flow, simple and powerful. take a look at [Demo](http://michalliu.github.com/task.js/) and [Automatic test](http://michalliu.github.com/task.js/test/index.html)
 
 Usage
 -----
