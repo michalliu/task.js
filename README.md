@@ -87,7 +87,7 @@ Instance method
     
 5. **done(fn)**
 
-    set callback function when task is done
+    set callback function when task is done, if the task is protected, that means there's no assertion errors. if task isn't protected, that means the task has finished.
     
     **params:**
     
@@ -97,7 +97,19 @@ Instance method
     
     the task object itself
 
-6. **repeat(times)**
+6. **finish(fn)**
+
+    set callback function when task is finish. different with **done** method, when task is done, it always finished. if the task is protected and assertion failed, the task is finished but _not_ done.
+    
+    **params:**
+    
+    `fn` - the callback function when task is done
+    
+    **returns:**
+    
+    the task object itself
+    
+7. **repeat(times)**
 
     set the times to repeat to do the task
     
@@ -109,7 +121,7 @@ Instance method
     
     the task object itself
     
-7. **assertEquals([fn,fn,...])**
+8. **assertEquals([fn,fn,...])**
     
     assert parammeters or it's return value is equal
 
@@ -121,7 +133,7 @@ Instance method
     
     the task object itself
     
-8. **assertNotEquals([fn,fn,...])**
+9. **assertNotEquals([fn,fn,...])**
 
     assert parammeters or it's return value isn't equal
 
@@ -133,7 +145,7 @@ Instance method
     
     the task object itself
     
-9. **assertFalse(fn)**
+10. **assertFalse(fn)**
 
     assert parammeters or it's return value is false
 
@@ -145,7 +157,7 @@ Instance method
     
     the task object itself
     
-10. **assertTrue(fn)**
+11. **assertTrue(fn)**
 
     assert parammeters or it's return value is true
 
@@ -157,7 +169,7 @@ Instance method
     
     the task object itself
 
-11. **protect()**
+12. **protect()**
 
     protect the queue, once any assertion failed, the task is finished. this is the default behaviour.
     
@@ -169,7 +181,7 @@ Instance method
     
     this function returns nothing
 
-12. **unprotect()**
+13. **unprotect()**
 
     unprotect the queue, ignore the assertion failed event, continue to execute the rest task.
     
