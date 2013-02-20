@@ -73,7 +73,7 @@ Instance method
     
     **returns:**
     
-    this function returns nothing
+    this function has no return value
 
 4. **progress(fn)**
 
