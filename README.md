@@ -169,7 +169,7 @@ Instance method
     
     this function returns nothing
 
-12. **protect()**
+12. **unprotect()**
 
     unprotect the queue, ignore the assertion failed event, continue to execute the rest task.
     
