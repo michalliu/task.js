@@ -35,9 +35,8 @@ By this tiny script `task.js`, you just need this
     .run(function () {})
     .sleep(1000)
     .run(function () {})
+    .start();
     
-`sleep` method support function, you can generate timeout value dynamiclly
-
 Instance method
 ----
 1. **run(fn)**
@@ -64,7 +63,53 @@ Instance method
     
     the task object itself
     
-3. **assertEquals([fn,fn,...])**
+3. **start()**
+    
+    start execute task
+
+    **params:**
+    
+    this function takes no params
+    
+    **returns:**
+    
+    this function returns nothing
+
+4. **progress(fn)**
+
+    set the callback function to execute after each small task is executed
+    
+    `fn` - the callback function. this function will be passed three parameters. `step` - the index of "run" function, `currentRepeat` - the index of repeat, `totalRepeat` - total repeat times.
+    
+    **returns:**
+    
+    the task object itself
+    
+5. **done(fn)**
+
+    set callback function when task is done
+    
+    **params:**
+    
+    `fn` - the callback function when task is done
+    
+    **returns:**
+    
+    the task object itself
+
+6. **repeat(times)**
+
+    set the times to repeat to do the task
+    
+    **params:**
+    
+    `times` - the times to repeat to do the task
+    
+    **returns:**
+    
+    the task object itself
+    
+7. **assertEquals([fn,fn,...])**
     
     assert parammeters or it's return value is equal
 
@@ -76,7 +121,7 @@ Instance method
     
     the task object itself
     
-4. **assertNotEquals([fn,fn,...])**
+8. **assertNotEquals([fn,fn,...])**
 
     assert parammeters or it's return value isn't equal
 
@@ -88,7 +133,7 @@ Instance method
     
     the task object itself
     
-5. **assertFalse(fn)**
+9. **assertFalse(fn)**
 
     assert parammeters or it's return value is false
 
@@ -100,7 +145,7 @@ Instance method
     
     the task object itself
     
-6. **assertTrue(fn)**
+10. **assertTrue(fn)**
 
     assert parammeters or it's return value is true
 
@@ -111,6 +156,30 @@ Instance method
     **returns:**
     
     the task object itself
+
+11. **protect()**
+
+    protect the queue, once any assertion failed, the task is finished. this is the default behaviour.
+    
+    **params:**
+    
+    this function takes no params
+    
+    **returns:**
+    
+    this function returns nothing
+
+12. **protect()**
+
+    unprotect the queue, ignore the assertion failed event, continue to execute the rest task.
+    
+    **params:**
+    
+    this function takes no params
+    
+    **returns:**
+    
+    this function returns nothing
 
 Static method
 ----
