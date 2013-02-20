@@ -218,3 +218,16 @@ it follows the following routine
 2. if `window` has `console` object, and console has assert method, let `window.console` handle it
 3. if no handlers, just throw an `AssertionFail` error
 4. stop the rest tasks
+
+Show me some examples
+----
+
+    var i=1;
+    var result = 0;
+    
+	task().run(function () {
+		result = result + i;
+		i = i + 1;
+	}).repeat(100).done(function () {
+		console.log(result); // output 5050
+	}).start();
