@@ -4,6 +4,8 @@ function now() {
 	return new Date().getTime();
 }
 
+var timePrecision = 20;
+
 asyncTest("run method", 1, function () {
 	task().run(function () {
 		ok(true, "function executed");
@@ -29,7 +31,8 @@ asyncTest("sleep method", 2, function () {
 	task().sleep(1000).run(function () {
 		ok(true, "function executed");
 	}).done(function () {
-		ok((now() - begin - 1000) <= 10, "sleeped 1s");
+		var diff = now() - begin;
+		ok((diff - 1000) <= timePrecision, "sleeped 1s, " + diff);
 		start();
 	}).start();
 });
@@ -41,7 +44,8 @@ asyncTest("mutiple sleep method", 3, function () {
 	}).sleep(1000).run(function () {
 		ok(true, "function executed");
 	}).done(function () {
-		ok((now() - begin - 2000) < 10, "sleeped 2s");
+		var diff = now() - begin;
+		ok((diff - 2000) < timePrecision, "sleeped 2s, " + diff);
 		start();
 	}).start();
 });
@@ -78,7 +82,7 @@ asyncTest("repeat with sleep", 13, function () {
 		ok(diff,"after " + diff + "ms");
 	}).sleep(1000).repeat(3).done(function () {
 		var diff = now()-begin;
-		ok((diff - 4500) < 10, "total used 4.5s");
+		ok((diff - 4500) < timePrecision, "total used 4.5s, " + diff);
 		start();
 	}).start();
 });
@@ -94,7 +98,8 @@ asyncTest("repeat with assertion", 3, function () {
 	}).assertTrue(function () {
 		return (t * 100) === a; // this should be true everytime
 	}).sleep(1000).repeat(3).done(function () {
-		ok((now() - begin - 3000) < 10, "sleeped 3s total");
+		var diff = now()-begin;
+		ok((diff - 3000) < timePrecision, "sleeped 3s total, " + diff);
 		ok(true, "no assertion error happened");
 		equal(a, 300, "repeat 3 times total");
 		start();
