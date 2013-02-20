@@ -1,7 +1,11 @@
 /*jshint browser:true*/
 /*global console*/
-(function () {
+;(function () {
 	"use strict";
+
+	var todoFlag = "todo",
+		timerFlag = "timer";
+
 	function AssertionFail(message) {
 		this.message = message;
 		this.toString = function () {
@@ -17,19 +21,29 @@
 		if (!(this instanceof Task)) {
 			return new Task();
 		}
-		var undef;
-		this.timer = []; // timer list
-		this.todo = {}; // todo list, the key is timer
-		this.timeout = 0; // current timeout value
-		this.lastResult = undef; // last value returned from function
+		this.queue = []; // event queue
+		this.timer = []; // store timers
+		this.timeout = 0; // timeout recorder
+		this.todo = {}; // todo list
 	}
 
 	Task.prototype = {
-		run: function (fn) {
+		run: function (fn) { // put to run queue
+			this.queue.push(todoFlag);
+			this.queue.push(fn);
+			return this;
+		},
+		sleep: function (time) { // put to sleep queue
+			this.queue.push(timerFlag);
+			this.queue.push(time);
+			return this;
+		},
+		_run: function (fn) { // actually run
 			var lastTimer;
 			if (isFunction(fn)) {
 				if (this.timer.length <= 0) {
-					this.lastResult = fn(this.lastResult);
+					this._sleep(0); // generate a timer
+					this._run(fn); // don't push to queue again
 				} else {
 					lastTimer = this.timer[this.timer.length - 1];
 					if (!this.todo[lastTimer]) {
@@ -38,9 +52,8 @@
 					this.todo[lastTimer].push(fn);
 				}
 			}
-			return this;
 		},
-		sleep: function (time) {
+		_sleep: function (time) { // actually sleep
 			if (isFunction(time)) {
 				time = time(this.lastResult);
 				if (typeof time !== "number") { // parse time to number
@@ -61,7 +74,6 @@
 				}
 			}, that.timeout);
 			this.timer.push(timer);
-			return this;
 		},
 		assertEquals: function () {
 			var fns = arguments;
@@ -144,7 +156,8 @@
 		assert: function (assertFn) {
 			var that = this;
 			if (isFunction(assertFn)){
-				this.sleep(0).run(function (d) {
+				this.sleep(0);
+				this.run(function (d) {
 					var result = assertFn(d);
 					var ret = result[0]; // assert success or not
 					var statement = result[1]; // tips message
@@ -167,10 +180,68 @@
 							clearTimeout(timer); // stop the timer associate with functions not yet executed
 						});
 					}
-				}).sleep(0);
+				});
+				this.sleep(0);
+			}
+			return this;
+		},
+		// set max repeat times
+		repeat: function (times) {
+			this._maxRepeat = times;
+			return this;
+		},
+		// start run queue
+		start: function () {
+			var q = this.queue;
+			var one;
+			var fn;
+			var currentRepeat = 1;
+			var onProgress = this._onProgress;
+			var maxRepeat = this._maxRepeat || 1;
+
+			function progressEmitter(x, y) {
+				return function (arg) {
+					onProgress(x, y, maxRepeat);
+					// this function must return the arg not altered
+					// to support the return value passing mechanism
+					return arg;
+				};
+			}
+
+			do{
+				for (var i=0,step=0;i<q.length;i+=2) {
+					one = q[i];
+					if (one === todoFlag) {
+						fn = q[i+1];
+						this._run(fn);
+						// insert a function to emit a progress event
+						if (onProgress && isFunction(onProgress)) {
+							this._run(progressEmitter(step++, currentRepeat));
+						}
+					} else if (one === timerFlag) {
+						fn = q[i+1];
+						this._sleep(fn);
+					}
+				}
+				this._sleep(0); // start over
+			} while(++currentRepeat <= maxRepeat);
+			if(this._onDone) {
+				this._run(this._onDone);
+			}
+		},
+		progress: function (fn) {
+			if (isFunction(fn)) {
+				this._onProgress = fn;
+			}
+			return this;
+		},
+		done: function (fn) {
+			if (isFunction(fn)) {
+				this._onDone = fn;
 			}
 			return this;
 		}
 	};
+
 	window.task = Task;
 }());
