@@ -97,9 +97,9 @@ Instance method
     
     the task object itself
 
-6. **finish(fn)**
+6. **interrupt(fn)**
 
-    set callback function when task is finish. generally same with _done_. the difference is when the task is protected, and encounter assertion fail, the _done_ callback will never be called, and the _finish_ callback is called. remember, when task is done, it always finished.
+    set callback function when task is interrupted. when the task is protected and there is assertion fail, the task will be interrupted.
     
     **params:**
     
@@ -218,23 +218,3 @@ it follows the following routine
 2. if `window` has `console` object, and console has assert method, let `window.console` handle it
 3. if no handlers, just throw an `AssertionFail` error
 4. stop the rest tasks
-
-What's the different between _finish_ and _done_
-
-just looking at the following example:
-
-    task().protect().assertTrue(function () { 
-        return false; // assertion fail
-    }).finish(function () {
-        // this will executed
-    }).done(function () {
-        // this will not executed since the first assertion has failed
-    });
-    
-    task().unprotect().assertTrue(function () {
-        return false; // assertion fail
-    }).finish(function () {
-        // this will executed
-    }).done(function () {
-        // this will executed since the task isn't protected
-    });
