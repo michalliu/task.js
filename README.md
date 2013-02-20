@@ -222,13 +222,29 @@ it follows the following routine
 Show me some examples
 ----
 
-    var i=1;
-    var result = 0;
-    
-    task().run(function () {
-        result = result + i;
-        i = i + 1;
-    }).repeat(100).done(function () {
-        console.log(result); // output 5050
-    }).start();
-	
+```javascript
+var i=1;
+var result = 0;
+
+task().run(function () {
+    result = result + i;
+    i = i + 1;
+}).repeat(100).done(function () {
+    console.log(result); // output 5050
+}).start();
+```
+
+```javascript
+var i=1;
+var result = 0;
+
+task().run(function () {
+    result = result + i;
+    i = i + 1;
+}).sleep(500).run(function () {
+    console.log(result); // output result every 500ms
+}).repeat(100).done(function () {
+    console.log(result); // output 5050
+});
+}).start();
+```
