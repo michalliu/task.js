@@ -225,9 +225,10 @@ Show me some examples
     var i=1;
     var result = 0;
     
-	task().run(function () {
-		result = result + i;
-		i = i + 1;
-	}).repeat(100).done(function () {
-		console.log(result); // output 5050
-	}).start();
+    task().run(function () {
+        result = result + i;
+        i = i + 1;
+    }).repeat(100).done(function () {
+        console.log(result); // output 5050
+    }).start();
+	
