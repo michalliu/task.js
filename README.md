@@ -103,7 +103,7 @@ Instance method
     
     **params:**
     
-    `fn` - the callback function when task is done
+    `fn` - the callback function when task is done. `detail` - fn will be fulfilled with error details.
     
     **returns:**
     

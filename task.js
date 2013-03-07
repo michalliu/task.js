@@ -189,7 +189,7 @@
 						// stop the timer associate with functions not yet executed
 						if (that.protective) {
 							if (that._onInterrupt) { // trigger interrupt event
-								that._onInterrupt();
+								that._onInterrupt(statement);
 							}
 							that.timer.forEach(function (timer) {
 								clearTimeout(timer);
@@ -207,7 +207,7 @@
 								console.assert(ret,statement);// let console handles it
 							} else {
 								if (that.protective && that._onInterrupt) { // trigger interrupt event
-									that._onInterrupt();
+									that._onInterrupt(statement);
 								}
 								throw new AssertionFail(statement); // or throw it
 							}
