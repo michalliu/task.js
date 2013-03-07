@@ -186,6 +186,15 @@
 					var ret = result[0]; // determin assert result
 					var statement = result[1]; // tips message
 					if (!ret) { // assertion failed
+						// stop the timer associate with functions not yet executed
+						if (that.protective) {
+							if (that._onInterrupt) { // trigger interrupt event
+								that._onInterrupt();
+							}
+							that.timer.forEach(function (timer) {
+								clearTimeout(timer);
+							});
+						}
 						if (Task.onAssertionFail) { // has assertion error handler
 							try{
 								AssertionFail.prototype = new Error(); // generate error stack
@@ -202,15 +211,6 @@
 								}
 								throw new AssertionFail(statement); // or throw it
 							}
-						}
-						// stop the timer associate with functions not yet executed
-						if (that.protective) {
-							if (that._onInterrupt) { // trigger interrupt event
-								that._onInterrupt();
-							}
-							that.timer.forEach(function (timer) {
-								clearTimeout(timer);
-							});
 						}
 					}
 				}).sleep(0); // make sure assertion is running on a stand alone context
