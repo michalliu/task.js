@@ -108,7 +108,7 @@ asyncTest("repeat with assertion", 3, function () {
 
 asyncTest("progress method", 2, function () {
 	var a=0;
-	var progressResultExcepted = [0,1,3,1,1,3,0,2,3,1,2,3,0,3,3,1,3,3];
+	var progressResultExcepted = [1,2,1,3,2,2,1,3,1,2,2,3,2,2,2,3,1,2,3,3,2,2,3,3];
 	var progressResultActual=[];
 	task().run(function () {
 		a += 100;
@@ -116,8 +116,8 @@ asyncTest("progress method", 2, function () {
 	}).sleep(50).run(function (d) {
 		// do nothing
 		return d;
-	}).repeat(3).progress(function (step,currentRepeat,maxRepeat) {
-		progressResultActual=progressResultActual.concat([step,currentRepeat,maxRepeat]);
+	}).repeat(3).progress(function (currentStep,totalStep, currentRepeat,totalRepeat) {
+		progressResultActual=progressResultActual.concat([currentStep,totalStep,currentRepeat,totalRepeat]);
 	}).done(function () {
 		deepEqual(progressResultActual,progressResultExcepted,"progress event generate properly");
 		equal(a, 300, "repeat 3 times");
@@ -127,7 +127,7 @@ asyncTest("progress method", 2, function () {
 
 asyncTest("progress with assertion", 2, function () {
 	var a=0;
-	var progressResultExcepted = [0,1,3,1,1,3,2,1,3,0,2,3,1,2,3,2,2,3,0,3,3,1,3,3,2,3,3];
+	var progressResultExcepted = [1,3,1,3,2,3,1,3,3,3,1,3,1,3,2,3,2,3,2,3,3,3,2,3,1,3,3,3,2,3,3,3,3,3,3,3];
 	var progressResultActual=[];
 	task().run(function () {
 		a += 100;
@@ -137,8 +137,8 @@ asyncTest("progress with assertion", 2, function () {
 		return d;
 	}).assertTrue(function (e) {
 		return a===e;
-	}).repeat(3).progress(function (step,currentRepeat,maxRepeat) {
-		progressResultActual=progressResultActual.concat([step,currentRepeat,maxRepeat]);
+	}).repeat(3).progress(function (currentStep,totalStep, currentRepeat,totalRepeat) {
+		progressResultActual=progressResultActual.concat([currentStep,totalStep,currentRepeat,totalRepeat]);
 	}).done(function () {
 		deepEqual(progressResultActual,progressResultExcepted,"progress event generate properly");
 		ok(true, "no assertion error");

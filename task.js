@@ -227,13 +227,14 @@
 			var q = this.queue;
 			var one;
 			var fn;
-			var currentRepeat = 1;
+			var currentRepeat = 1; // current repeat
 			var onProgress = this._onProgress;
-			var maxRepeat = this._maxRepeat || 1;
+			var maxRepeat = this._maxRepeat || 1; // the total repeat count
+			var maxOps = 0; // the total operations count
 
-			function progressEmitter(x, y) {
+			function progressEmitter(cOps, cRepeat) {
 				return function (arg) {
-					onProgress(x, y, maxRepeat);
+					onProgress(cOps, maxOps, cRepeat, maxRepeat);
 					// this function must return the arg not altered
 					// to support the return value passing mechanism
 					return arg;
@@ -250,7 +251,10 @@
 						// but not in the original running queque
 						// it's much more like a ghost
 						if (onProgress && isFunction(onProgress)) {
-							this._run(progressEmitter(step++, currentRepeat));
+							this._run(progressEmitter(++step, currentRepeat));
+						}
+						if (currentRepeat === 1) {
+							maxOps++; // increase the total operations count
 						}
 					} else if (one === timerFlag) { // next one is a timer(generator)
 						fn = q[i+1];
