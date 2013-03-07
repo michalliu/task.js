@@ -79,7 +79,7 @@ Instance method
 
     set the callback function to execute after each small task is executed
     
-    `fn` - the callback function. this function will be passed three parameters. `step` - the index of "run" function, `currentRepeat` - the index of repeat, `totalRepeat` - total repeat times.
+    `fn` - the callback function. this function will be passed three parameters. `step` - the index of "run" function, `totalStep` - the total step of the task, `currentRepeat` - the index of repeat, `totalRepeat` - total repeat times.
     
     **returns:**
     
