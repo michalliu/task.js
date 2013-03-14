@@ -75,6 +75,18 @@ Instance method
     
     this function has no return value
 
+3. **cancel()**
+    
+    stop execute task, the interrupt handler will be executed, see interrupt method
+
+    **params:**
+    
+    this function takes no params
+    
+    **returns:**
+    
+    this function has no return value
+
 4. **progress(fn)**
 
     set the callback function to execute after each small task is executed
