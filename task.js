@@ -93,7 +93,9 @@
 				if(callbacks && callbacks.forEach) {
 					callbacks.forEach(function (cb) {
 						// record the last result returned by the "run" function
-						that.lastResult = cb(that.lastResult);
+						if (!that._cancelled) {
+							that.lastResult = cb.call(that, that.lastResult);
+						}
 					});
 				}
 			}, that.timeout);
@@ -188,12 +190,7 @@
 					if (!ret) { // assertion failed
 						// stop the timer associate with functions not yet executed
 						if (that.protective) {
-							if (that._onInterrupt) { // trigger interrupt event
-								that._onInterrupt(statement);
-							}
-							that.timer.forEach(function (timer) {
-								clearTimeout(timer);
-							});
+							that.cancel(statement);
 						}
 						if (Task.onAssertionFail) { // has assertion error handler
 							try{
@@ -266,6 +263,15 @@
 			if(this._onDone) { // trigger done event
 				this._run(this._onDone);
 			}
+		},
+		cancel: function (statement) {
+			if (this._onInterrupt) { // trigger interrupt event
+				this._onInterrupt(statement);
+			}
+			this.timer.forEach(function (timer) {
+				clearTimeout(timer);
+			});
+			this._cancelled = true; // mark this task has cancelled
 		},
 		// set progress callback
 		progress: function (fn) {

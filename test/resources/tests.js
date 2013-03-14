@@ -6,6 +6,39 @@ function now() {
 
 var timePrecision = 20;
 
+asyncTest("start method", 1, function () {
+	task().run(function () {
+		ok(true, "function executed");
+		start();
+	}).start();
+});
+
+asyncTest("cancel method sync", 1, function () {
+	task().run(function () {
+		ok(true, "function executed");
+	}).run(function () {
+		this.cancel();
+	}).sleep(0).run(function () {
+		ok(true, "function executed");
+	}).start();
+	setTimeout(function () {
+		start();
+	},1000);
+});
+
+asyncTest("cancel method async", 1, function () {
+	task().run(function () {
+		ok(true, "function executed");
+	}).run(function () {
+		this.cancel();
+	}).run(function () {
+		ok(true, "function executed");
+	}).start();
+	setTimeout(function () {
+		start();
+	},1000);
+});
+
 asyncTest("run method", 1, function () {
 	task().run(function () {
 		ok(true, "function executed");
