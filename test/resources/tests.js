@@ -158,6 +158,30 @@ asyncTest("progress method", 2, function () {
 	}).start();
 });
 
+asyncTest("mutiple progress method", 3, function () {
+	var a=0;
+	var progressResultExcepted1 = [1,2,1,3,2,2,1,3,1,2,2,3,2,2,2,3,1,2,3,3,2,2,3,3];
+	var progressResultExcepted2 = [1,2,1,3,2,2,1,3,1,2,2,3,2,2,2,3,1,2,3,3,2,2,3,3];
+	var progressResultActual1=[];
+	var progressResultActual2=[];
+	task().run(function () {
+		a += 100;
+		return a;
+	}).sleep(50).run(function (d) {
+		// do nothing
+		return d;
+	}).repeat(3).progress(function (currentStep,totalStep, currentRepeat,totalRepeat) {
+		progressResultActual1=progressResultActual1.concat([currentStep,totalStep,currentRepeat,totalRepeat]);
+	}).progress(function (currentStep,totalStep, currentRepeat,totalRepeat) {
+		progressResultActual2=progressResultActual2.concat([currentStep,totalStep,currentRepeat,totalRepeat]);
+	}).done(function () {
+		deepEqual(progressResultActual1,progressResultExcepted1,"progress event generate properly");
+		deepEqual(progressResultActual2,progressResultExcepted2,"progress event generate properly");
+		equal(a, 300, "repeat 3 times");
+		start();
+	}).start();
+});
+
 asyncTest("progress with assertion", 2, function () {
 	var a=0;
 	var progressResultExcepted = [1,3,1,3,2,3,1,3,3,3,1,3,1,3,2,3,2,3,2,3,3,3,2,3,1,3,3,3,2,3,3,3,3,3,3,3];
@@ -217,16 +241,45 @@ asyncTest("done method", 3, function () {
 	}).start();
 });
 
+asyncTest("mutiple done method", 4, function () {
+	task().run(function () {
+		ok(true,"function executed"); // this should run 3 times
+	}).sleep(1000).repeat(3).done(function () {
+		ok(true,"done executed"); // this should run 1 times
+	}).done(function () {
+		start();
+	}).start();
+});
+
 asyncTest("interrupt method", 3, function () {
 	task.onAssertionFail = function (ex) {
 		ok(ex,ex);
 	};
 	task().run(function () {
-		ok(true,"function executed"); // this should run 3 times
+		ok(true,"function executed"); // this should run
 	}).sleep(1000).assertTrue(function () {
 		return false;
 	}).sleep(100).interrupt(function () {
-		ok(true,"interrupted"); // this should run
+		ok(true,"interrupted function executed"); // this should run
+		start();
+	}).done(function () {
+		ok(false,"done shouldn't executed"); // this shouldn't run
+		start();
+	}).protect().start();
+});
+
+asyncTest("mutiple interrupt method", 4, function () {
+	task.onAssertionFail = function (ex) {
+		ok(ex,ex);
+	};
+	task().run(function () {
+		ok(true,"function executed"); // this should run
+	}).sleep(1000).assertTrue(function () {
+		return false;
+	}).sleep(100).interrupt(function () {
+		ok(true,"interrupt function 1 executed"); // this should run
+	}).interrupt(function () {
+		ok(true,"interrupted function 2 executed"); // this should run
 		start();
 	}).done(function () {
 		ok(false,"done shouldn't executed"); // this shouldn't run
