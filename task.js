@@ -235,7 +235,7 @@
 			function progressEmitter(cOps, cRepeat) {
 				return function (arg) {
 					onProgress.forEach(function (fn) {
-						fn(cOps, maxOps, cRepeat, maxRepeat);
+						fn.apply(that,[cOps, maxOps, cRepeat, maxRepeat]);
 					});
 					// this function must return the arg not altered
 					// to support the return value passing mechanism
