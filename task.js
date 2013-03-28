@@ -204,7 +204,9 @@
 								console.assert(ret,statement);// let console handles it
 							} else {
 								if (that.protective && that._onInterrupt) { // trigger interrupt event
-									that._onInterrupt(statement);
+									that._onInterrupt.forEach(function (fn) {
+										fn.call(that, statement);
+									});
 								}
 								throw new AssertionFail(statement); // or throw it
 							}
@@ -228,10 +230,13 @@
 			var onProgress = this._onProgress;
 			var maxRepeat = this._maxRepeat || 1; // the total repeat count
 			var maxOps = 0; // the total operations count
+			var that = this;
 
 			function progressEmitter(cOps, cRepeat) {
 				return function (arg) {
-					onProgress(cOps, maxOps, cRepeat, maxRepeat);
+					onProgress.forEach(function (fn) {
+						fn.apply(that,[cOps, maxOps, cRepeat, maxRepeat]);
+					});
 					// this function must return the arg not altered
 					// to support the return value passing mechanism
 					return arg;
@@ -247,7 +252,7 @@
 						// insert a function to emit a progress event
 						// but not in the original running queque
 						// it's much more like a ghost
-						if (onProgress && isFunction(onProgress)) {
+						if (onProgress) {
 							this._run(progressEmitter(++step, currentRepeat));
 						}
 						if (currentRepeat === 1) {
@@ -261,12 +266,17 @@
 				this._sleep(0); // start over, run queque again, no delay
 			} while(++currentRepeat <= maxRepeat);
 			if(this._onDone) { // trigger done event
-				this._run(this._onDone);
+				this._onDone.forEach(function (fn) {
+					that._run(fn);
+				});
 			}
 		},
 		cancel: function (statement) {
+			var that = this;
 			if (this._onInterrupt) { // trigger interrupt event
-				this._onInterrupt(statement);
+				this._onInterrupt.forEach(function (fn) {
+					fn.call(that, statement);
+				});
 			}
 			this.timer.forEach(function (timer) {
 				clearTimeout(timer);
@@ -276,20 +286,29 @@
 		// set progress callback
 		progress: function (fn) {
 			if (isFunction(fn)) {
-				this._onProgress = fn;
+				if (!this._onProgress) {
+					this._onProgress = [];
+				}
+				this._onProgress.push(fn);
 			}
 			return this;
 		},
 		interrupt: function (fn) {
 			if (isFunction(fn)) {
-				this._onInterrupt = fn;
+				if (!this._onInterrupt) {
+					this._onInterrupt = [];
+				}
+				this._onInterrupt.push(fn);
 			}
 			return this;
 		},
 		// set done callback
 		done: function (fn) {
 			if (isFunction(fn)) {
-				this._onDone = fn;
+				if (!this._onDone) {
+					this._onDone = [];
+				}
+				this._onDone.push(fn);
 			}
 			return this;
 		},
