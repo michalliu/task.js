@@ -6,11 +6,14 @@ function now() {
 
 var timePrecision = 20;
 
-asyncTest("start method", 1, function () {
-	task().run(function () {
+asyncTest("start method", 2, function () {
+	var t;
+	t = task().run(function () {
 		ok(true, "function executed");
+		deepEqual(t, this, "'this' point to task object");
 		start();
-	}).start();
+	});
+	t.start();
 });
 
 asyncTest("cancel method sync", 1, function () {
@@ -139,11 +142,12 @@ asyncTest("repeat with assertion", 3, function () {
 	}).start();
 });
 
-asyncTest("progress method", 2, function () {
+asyncTest("progress method", 3, function () {
 	var a=0;
 	var progressResultExcepted = [1,2,1,3,2,2,1,3,1,2,2,3,2,2,2,3,1,2,3,3,2,2,3,3];
 	var progressResultActual=[];
-	task().run(function () {
+	var t;
+	t = task().run(function () {
 		a += 100;
 		return a;
 	}).sleep(50).run(function (d) {
@@ -154,8 +158,10 @@ asyncTest("progress method", 2, function () {
 	}).done(function () {
 		deepEqual(progressResultActual,progressResultExcepted,"progress event generate properly");
 		equal(a, 300, "repeat 3 times");
+		deepEqual(t, this, "'this' point to task object");
 		start();
-	}).start();
+	});
+	t.start();
 });
 
 asyncTest("mutiple progress method", 3, function () {
@@ -233,12 +239,15 @@ asyncTest("asserttion fail(died queue)", 1, function () {
 	}).start();
 });
 
-asyncTest("done method", 3, function () {
-	task().run(function () {
+asyncTest("done method", 4, function () {
+	var t;
+	t = task().run(function () {
 		ok(true,"function executed"); // this should run 3 times
 	}).sleep(1000).repeat(3).done(function () {
+		deepEqual(t, this, "'this' point to task object");
 		start();
-	}).start();
+	});
+	t.start();
 });
 
 asyncTest("mutiple done method", 4, function () {
@@ -251,21 +260,24 @@ asyncTest("mutiple done method", 4, function () {
 	}).start();
 });
 
-asyncTest("interrupt method", 3, function () {
+asyncTest("interrupt method", 4, function () {
+	var t;
 	task.onAssertionFail = function (ex) {
 		ok(ex,ex);
 	};
-	task().run(function () {
+	t = task().run(function () {
 		ok(true,"function executed"); // this should run
 	}).sleep(1000).assertTrue(function () {
 		return false;
 	}).sleep(100).interrupt(function () {
 		ok(true,"interrupted function executed"); // this should run
+		deepEqual(t, this, "'this' point to task object");
 		start();
 	}).done(function () {
 		ok(false,"done shouldn't executed"); // this shouldn't run
 		start();
-	}).protect().start();
+	}).protect();
+	t.start();
 });
 
 asyncTest("mutiple interrupt method", 4, function () {
