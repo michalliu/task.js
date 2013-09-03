@@ -247,17 +247,17 @@
 				for (var i=0,step=0;i<q.length;i+=2) {
 					one = q[i];
 					if (one === todoFlag) { // next one is todo function
-						fn = q[i+1];
+					    fn = q[i + 1];
+					    // insert a function to emit a progress event
+					    // but not in the original running queque
+					    // it's much more like a ghost
+					    if (onProgress) {
+					        this._run(progressEmitter(++step, currentRepeat));
+					    }
+					    if (currentRepeat === 1) {
+					        maxOps++; // increase the total operations count
+					    }
 						this._run(fn);
-						// insert a function to emit a progress event
-						// but not in the original running queque
-						// it's much more like a ghost
-						if (onProgress) {
-							this._run(progressEmitter(++step, currentRepeat));
-						}
-						if (currentRepeat === 1) {
-							maxOps++; // increase the total operations count
-						}
 					} else if (one === timerFlag) { // next one is a timer(generator)
 						fn = q[i+1];
 						this._sleep(fn);
