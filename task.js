@@ -232,6 +232,7 @@
 			var maxRepeat = this._maxRepeat || 1; // the total repeat count
 			var maxOps = 0; // the total operations count
 			var that = this;
+			var lastFlag;
 
 			function progressEmitter(cOps, cRepeat) {
 				return function (arg) {
@@ -252,9 +253,14 @@
 					    // insert a function to emit a progress event
 					    // but not in the original running queque
 					    // it's much more like a ghost
+
 					    // only todo function raise the progress event
-                        // the assertFunction Doesn't raise the progress event
-					    if (one === todoFlag) {
+					    // the assertFunction Doesn't raise the progress event
+                       
+					    // two function with no timer between them considered as one opertion
+					    // task().run(function a(){}).run(function b(){}).sleep(50)
+                        // a & b considered as one progress
+					    if (one === todoFlag && lastFlag === timerFlag) {
 					        if (onProgress) {
 					            this._run(progressEmitter(++step, currentRepeat));
 					        }
@@ -263,9 +269,11 @@
 					        }
 					    }
 					    this._run(fn);
+					    lastFlag = one;
 					} else if (one === timerFlag) { // next one is a timer(generator)
 						fn = q[i+1];
 						this._sleep(fn);
+						lastFlag = one;
 					}
 				}
 				this._sleep(0); // start over, run queque again, no delay
