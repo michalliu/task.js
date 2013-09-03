@@ -275,6 +275,7 @@
 						this._sleep(fn);
 						lastFlag = one;
 					}
+                    // nothing to do if the q is not a known flag
 				}
 				this._sleep(0); // start over, run queque again, no delay
 			} while(++currentRepeat <= maxRepeat);
