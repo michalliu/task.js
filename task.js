@@ -3,7 +3,8 @@
 ;(function () {
 	"use strict";
 
-	var todoFlag = "todo", // flag to mark the nextsibling is a todo(function)
+    var todoFlag = "todo", // flag to mark the nextsibling is a todo(function)
+        assertionFlag="assertion", // flag to mark the nextsibling is a assert(function)
 		timerFlag = "timer";// flag to mark the nextsibling is a timer(function)
 
 	// assertion fail error object
@@ -34,8 +35,8 @@
 	// prototype
 	Task.prototype = {
 		// put something to run queue
-		run: function (fn) {
-			this.queue.push(todoFlag);
+		run: function (fn, flag) {
+			this.queue.push(flag || todoFlag);
 			this.queue.push(fn);
 			return this;
 		},
@@ -212,7 +213,7 @@
 							}
 						}
 					}
-				}).sleep(0); // make sure assertion is running on a stand alone context
+				}, assertionFlag).sleep(0); // make sure assertion is running on a stand alone context
 			}
 			return this;
 		},
@@ -246,18 +247,22 @@
 			do{
 				for (var i=0,step=0;i<q.length;i+=2) {
 					one = q[i];
-					if (one === todoFlag) { // next one is todo function
+					if (one === todoFlag || one === assertionFlag) { // next one is todo function
 					    fn = q[i + 1];
 					    // insert a function to emit a progress event
 					    // but not in the original running queque
 					    // it's much more like a ghost
-					    if (onProgress) {
-					        this._run(progressEmitter(++step, currentRepeat));
+					    // only todo function raise the progress event
+                        // the assertFunction Doesn't raise the progress event
+					    if (one === todoFlag) {
+					        if (onProgress) {
+					            this._run(progressEmitter(++step, currentRepeat));
+					        }
+					        if (currentRepeat === 1) {
+					            maxOps++; // increase the total operations count
+					        }
 					    }
-					    if (currentRepeat === 1) {
-					        maxOps++; // increase the total operations count
-					    }
-						this._run(fn);
+					    this._run(fn);
 					} else if (one === timerFlag) { // next one is a timer(generator)
 						fn = q[i+1];
 						this._sleep(fn);
