@@ -232,7 +232,7 @@
 			var maxRepeat = this._maxRepeat || 1; // the total repeat count
 			var maxOps = 0; // the total operations count
 			var that = this;
-			var lastFlag;
+			var lastFlag = timerFlag;
 
 			function progressEmitter(cOps, cRepeat) {
 				return function (arg) {
