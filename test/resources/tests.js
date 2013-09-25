@@ -190,7 +190,14 @@ asyncTest("mutiple progress method", 3, function () {
 
 asyncTest("progress with assertion", 2, function () {
 	var a=0;
-	var progressResultExcepted = [1,3,1,3,2,3,1,3,3,3,1,3,1,3,2,3,2,3,2,3,3,3,2,3,1,3,3,3,2,3,3,3,3,3,3,3];
+	var progressResultExcepted = [
+									1,2,1,3,
+									2,2,1,3,
+									1,2,2,3,
+									2,2,2,3,
+									1,2,3,3,
+									2,2,3,3
+								];
 	var progressResultActual=[];
 	task().run(function () {
 		a += 100;
