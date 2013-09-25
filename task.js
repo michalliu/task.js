@@ -3,8 +3,8 @@
 ;(function () {
 	"use strict";
 
-    var todoFlag = "todo", // flag to mark the nextsibling is a todo(function)
-        assertionFlag="assertion", // flag to mark the nextsibling is a assert(function)
+	var todoFlag = "todo", // flag to mark the nextsibling is a todo(function)
+		assertionFlag="assertion", // flag to mark the nextsibling is a assert(function)
 		timerFlag = "timer";// flag to mark the nextsibling is a timer(function)
 
 	// assertion fail error object
@@ -246,36 +246,36 @@
 			}
 
 			do{
+				lastFlag = timerFlag;
 				for (var i=0,step=0;i<q.length;i+=2) {
 					one = q[i];
 					if (one === todoFlag || one === assertionFlag) { // next one is todo function
-					    fn = q[i + 1];
-					    // insert a function to emit a progress event
-					    // but not in the original running queque
-					    // it's much more like a ghost
+						fn = q[i + 1];
+						// insert a function to emit a progress event
+						// but not in the original running queque
+						// it's much more like a ghost
 
-					    // only todo function raise the progress event
-					    // the assertFunction Doesn't raise the progress event
-                       
-					    // two function with no timer between them considered as one opertion
-					    // task().run(function a(){}).run(function b(){}).sleep(50)
-                        // a & b considered as one progress
-					    if (one === todoFlag && lastFlag === timerFlag) {
-					        if (onProgress) {
-					            this._run(progressEmitter(++step, currentRepeat));
-					        }
-					        if (currentRepeat === 1) {
-					            maxOps++; // increase the total operations count
-					        }
-					    }
-					    this._run(fn);
-					    lastFlag = one;
+						// only todo function raise the progress event
+						// the assertFunction Doesn't raise the progress event
+						// two function with no timer between them considered as one opertion
+						// task().run(function a(){}).run(function b(){}).sleep(50)
+						// a & b considered as one progress
+						if (one === todoFlag && lastFlag === timerFlag) {
+							if (onProgress) {
+								this._run(progressEmitter(++step, currentRepeat));
+							}
+							if (currentRepeat === 1) {
+								maxOps++; // increase the total operations count
+							}
+						}
+						this._run(fn);
+						lastFlag = one;
 					} else if (one === timerFlag) { // next one is a timer(generator)
 						fn = q[i+1];
 						this._sleep(fn);
 						lastFlag = one;
 					}
-                    // nothing to do if the q is not a known flag
+					// nothing to do if the q is not a known flag
 				}
 				this._sleep(0); // start over, run queque again, no delay
 			} while(++currentRepeat <= maxRepeat);
