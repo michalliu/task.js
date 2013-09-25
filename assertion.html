@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>task.js - A beautiful way to control your task flow</title>
+	<link rel="stylesheet" href="./main.css"></link>
+	<script src="./task.js"></script>
+	<script>
+	function log(message) {
+		var holder = document.getElementById("log-holder");
+		holder.value+=message + "\n"
+		if (window.console) {
+			console.log(message);
+		}
+	}
+
+	task.onAssertionFail = function (err) {
+		log(err);
+	}
+
+	function start() {
+	task()
+	.run(function () {log("caculating...")})
+	.run(function () {
+		return 1+1;
+	})
+	.sleep(1000)
+	.assertTrue(function (result) { return result!==2;}) // assertion fail
+	.sleep(1000)
+	.run(function () {
+		log("done");
+	}).start();
+	}
+	</script>
+</head>
+<body>
+<a href="https://github.com/michalliu/task.js"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:1;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+<button onclick="start();">click to start</button>
+<pre class="code">
+// assertion fail handler
+task.onAssertionFail = function (err) {
+	log(err);
+}
+
+//
+task()
+.run(function () {log("caculating...")})
+.run(function () {
+	return 1+1;
+})
+.sleep(1000)
+.assertTrue(function (result) { return result!==2;}) // ok
+.sleep(1000)
+.run(function () {
+	log("done");
+}).start();
+</pre>
+<textarea id="log-holder" placeholder="Log Messages"></textarea>
+</body>
+</html>
+
