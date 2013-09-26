@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>task.js - A beautiful way to control your task flow</title>
+	<link rel="stylesheet" href="./main.css"></link>
+	<script src="./task.js"></script>
+	<script>
+	function log(message) {
+		var holder = document.getElementById("log-holder");
+		holder.value+=message + "\n"
+		if (window.console) {
+			console.log(message);
+		}
+	}
+
+	function start() {
+	task().run(function () {
+		// do nothing
+		// this is step 1
+	}).sleep(500).run(function () {
+		// do nothing
+		// this is step 2
+	}).sleep(500).run(function () {
+		// do nothing
+		// this is step 3
+	}).repeat(10).progress(function (currentStep,totalStep,currentRepeat,totalRepeat) {
+		// caculate progress
+		console.log([currentStep,totalStep,currentRepeat,totalRepeat])
+		var progress = (currentStep + (currentRepeat - 1) * totalStep) / (totalRepeat * totalStep)
+		log(Math.floor(progress * 10000) / 100 + "%")
+	}).done(function () {
+		log('done');
+	}).start();
+	}
+	</script>
+</head>
+<body>
+<a href="https://github.com/michalliu/task.js"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:1;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+<button onclick="start();">click to start</button>
+<pre class="code">
+	task().run(function () {
+		// do nothing
+		// this is step 1
+	}).sleep(500).run(function () {
+		// do nothing
+		// this is step 2
+	}).sleep(500).run(function () {
+		// do nothing
+		// this is step 3
+	}).repeat(10).progress(function (currentStep,totalStep,currentRepeat,totalRepeat) {
+		// caculate progress
+		console.log([currentStep,totalStep,currentRepeat,totalRepeat])
+		var progress = (currentStep + (currentRepeat - 1) * totalStep) / (totalRepeat * totalStep)
+		log(Math.floor(progress * 10000) / 100 + "%")
+	}).done(function () {
+		log('done');
+	}).start();
+</pre>
+<textarea id="log-holder" placeholder="Log Messages"></textarea>
+</body>
+</html>
+
